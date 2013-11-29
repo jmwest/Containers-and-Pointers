@@ -95,7 +95,22 @@ bool Dlist::isEmpty() const
 //EFFECTS:  inserts v into the front of the list
 void Dlist::insertFront(const T &datum)
 {
-	
+	Node node = new Node;
+
+	node.prev = 0;
+
+	if (isEmpty())
+	{
+		node.next = 0;
+		first = &node;
+		last = &node;
+
+		node.datum = datum;
+	}
+	else
+	{
+		
+	}
 
 	return;
 }
