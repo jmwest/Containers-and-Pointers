@@ -23,12 +23,10 @@ int main()
 	Dlist<int> dl;
 	// ( )
 
-	cerr << "here\n";
 	print_lists(&list, &dl);
 	assert(list.isEmpty());
 	assert(dl.isEmpty());
 
-	cerr << "there\n";
 	list.insertFront(1);
 	// ( 1 )
 	// ( )
@@ -171,7 +169,7 @@ int main()
 template <typename T>
 void print_lists(const Dlist<T> *l, const Dlist<T> *d)
 {
-	cerr << *l << *d;
+	cout << *l << *d;
 
 	return;
 }

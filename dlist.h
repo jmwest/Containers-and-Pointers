@@ -100,6 +100,15 @@ void Dlist<T>::insertFront(const T &datum)
 {
 	Node *node = new Node;
 
+	if (isEmpty())
+	{
+		last = node;
+	}
+	else
+	{
+		first->prev = node;
+	}
+
 	node->next = first;
 	node->prev = 0;
 	node->datum = datum;
@@ -115,6 +124,15 @@ template <typename T>
 void Dlist<T>::insertBack(const T &datum)
 {
 	Node *node = new Node;
+
+	if (isEmpty())
+	{
+		first = node;
+	}
+	else
+	{
+		last->next = node;
+	}
 
 	node->next = 0;
 	node->prev = last;
@@ -136,7 +154,16 @@ T Dlist<T>::removeFront()
 	Node *node = first;
 	T datum = first->datum;
 
-	first = first->next;
+	if (first == last)
+	{
+		first = 0;
+		last = 0;
+	}
+	else
+	{
+		first = first->next;
+		first->prev = 0;
+	}
 
 	delete node; node = 0;
 
@@ -161,7 +188,8 @@ T Dlist<T>::removeBack()
 	}
 	else
 	{
-		last->prev->next = 0;
+		last = last->prev;
+		last->next = 0;
 	}
 
 	delete node; node = 0;
