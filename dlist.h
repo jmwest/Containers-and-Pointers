@@ -71,7 +71,8 @@ private:
  * Member function implementations here
  ***************************************/
 
-Dlist::Dlist()                                   // ctor
+template <typename T>
+Dlist<T>::Dlist()                                   // ctor
 : first(0), last(0)
 {
 	assert(first == 0);
@@ -79,7 +80,8 @@ Dlist::Dlist()                                   // ctor
 }
 
 //EFFECTS:  returns true if the list is empty
-bool Dlist::isEmpty() const
+template <typename T>
+bool Dlist<T>::isEmpty() const
 {
 	if ((first == 0) and (last == 0))
 	{
@@ -93,33 +95,32 @@ bool Dlist::isEmpty() const
 
 //MODIFIES: this
 //EFFECTS:  inserts v into the front of the list
-void Dlist::insertFront(const T &datum)
+template <typename T>
+void Dlist<T>::insertFront(const T &datum)
 {
-	Node node = new Node;
+	Node *node = new Node;
 
-	node.prev = 0;
+	node->next = first;
+	node->prev = 0;
+	node->datum = datum;
 
-	if (isEmpty())
-	{
-		node.next = 0;
-		first = &node;
-		last = &node;
-
-		node.datum = datum;
-	}
-	else
-	{
-		
-	}
+	first = node;
 
 	return;
 }
 
 //MODIFIES: this
 //EFFECTS:  inserts v into the back of the list
-void Dlist::insertBack(const T &datum)
+template <typename T>
+void Dlist<T>::insertBack(const T &datum)
 {
-	
+	Node *node = new Node;
+
+	node->next = 0;
+	node->prev = last;
+	node->datum = datum;
+
+	last = node;
 
 	return;
 }
@@ -127,31 +128,98 @@ void Dlist::insertBack(const T &datum)
 //REQUIRES: list is not empty
 //MODIFIES: this
 //EFFECTS:  removes the item at the front of the list
-T Dlist::removeFront();
+template <typename T>
+T Dlist<T>::removeFront()
+{
+	assert(!isEmpty());
+
+	Node *node = first;
+	T datum = first->datum;
+
+	first = first->next;
+
+	delete node; node = 0;
+
+	return datum;
+}
 
 //REQUIRES: list is not empty
 //MODIFIES: this
 //EFFECTS:  removes the item at the back of the list
-T Dlist::removeBack();
+template <typename T>
+T Dlist<T>::removeBack()
+{
+	assert(!isEmpty());
 
-Dlist::Dlist(const Dlist &l);                     // copy ctor
-Dlist::Dlist &operator=(const Dlist &l);          // assignment
-Dlist::~Dlist();
+	Node *node = last;
+	T datum = last->datum;
+
+	if (first == last)
+	{
+		first = 0;
+		last = 0;
+	}
+	else
+	{
+		last->prev->next = 0;
+	}
+
+	delete node; node = 0;
+
+	return datum;
+}
+
+template <typename T>
+Dlist<T>::Dlist(const Dlist &l)                     // copy ctor
+: first(0), last(0)
+{
+	copyAll(l);
+}
+
+template <typename T>
+Dlist<T> &Dlist<T>::operator=(const Dlist<T> &l)          // assignment
+{
+	if (this != &l)
+	{
+		removeAll();
+		copyAll(l);
+	}
+
+	return *this;
+}
+
+template <typename T>
+Dlist<T>::~Dlist()
+{
+	removeAll();
+}
 
 //MODIFIES: this
 //EFFECTS:  copies all nodes from l to this
-void copyAll(const Dlist &l)
+template <typename T>
+void Dlist<T>::copyAll(const Dlist<T> &l)
 {
-	
+	Node *node = l.first;
+
+	while (node)
+	{
+		insertBack(node->datum);
+
+		node = node->next;
+	}
 
 	return;
 }
 
 //MODIFIES: this
 //EFFECTS:  removes all nodes
-void removeAll()
+template <typename T>
+void Dlist<T>::removeAll()
 {
-	
+	while (!isEmpty())
+	{
+		removeFront();
+	}
 
 	return;
 }

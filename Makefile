@@ -18,5 +18,10 @@ call : call.cpp dlist.h
 calc : calc.cpp dlist.h
 	$(CC) $(CFLAGS) calc.cpp -o calc
 
+dlist_test00 : dlist_test00.cpp dlist.h
+	$(CC) $(CFLAGS) dlist_test00.cpp -o dlist_test00
+	./dlist_test00 > dlist_test00.out
+	diff -q dlist_test00.out dlist_test00.out.correct
+
 clean :
 	rm -vf *.o *~ dlist_test calc call *.out
