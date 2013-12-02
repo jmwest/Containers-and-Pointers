@@ -163,6 +163,46 @@ int main()
 	assert(!dl.isEmpty());
 	assert(!ctor.isEmpty());
 
+	ctor.removeBack();
+	dl.insertBack(3);
+	// ( )
+	// ( 3 7 1 2 3 )
+	// ( 7 )
+
+	print_lists(&dl, &ctor);
+	assert(list.isEmpty());
+	assert(!dl.isEmpty());
+	assert(!ctor.isEmpty());
+
+	ctor.removeBack();
+	// ( )
+	// ( 3 7 1 2 3 )
+	// ( )
+
+	print_lists(&dl, &ctor);
+	assert(list.isEmpty());
+	assert(!dl.isEmpty());
+	assert(ctor.isEmpty());
+
+	ctor = dl;
+	dl = list;
+	// ( )
+	// ( )
+	// ( 3 7 1 2 3 )
+
+	print_lists(&dl, &ctor);
+	assert(list.isEmpty());
+	assert(dl.isEmpty());
+	assert(!ctor.isEmpty());
+
+	Dlist<int> copy(dl);
+
+	print_lists(&copy, &ctor);
+	assert(list.isEmpty());
+	assert(dl.isEmpty());
+	assert(!ctor.isEmpty());
+	assert(copy.isEmpty());
+
 	return 0;
 }
 
