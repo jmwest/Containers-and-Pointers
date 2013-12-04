@@ -37,7 +37,18 @@ static void run_operation(Dlist<double> * dlist, string * input);
 // REQUIRES: dlist is a pointer to an initialized Dlist
 static bool check_stack_has_enough_operands(const Dlist<double> * dlist, int operands_needed);
 
+//
+static bool compare_char_to_nums(char elem);
+
+// REQUIRES: dlist is a pointer to an initialized Dlist
+//
+static bool check_divides_by_zero(const Dlist<double> * dlist);
+
+//
 static void print_not_enough_operands();
+
+//
+static void print_divide_by_zero();
 
 int main()
 {
@@ -57,8 +68,6 @@ int main()
 			double number = atof(input.c_str());
 			stack.insertFront(number);
 		}
-
-		
 	}
 
 	return 0;
@@ -77,6 +86,10 @@ static string take_input()
 		{
 			cout << "Bad input\n";
 		}
+		else
+		{
+			good_input = true;
+		}
 	}
 
 	return user_input;
@@ -84,7 +97,8 @@ static string take_input()
 
 static bool check_valid_input(string * input)
 {
-	if (check_input_is_operation(input) or check_input_is_number(input))
+	if (   check_input_is_operation(input)
+		or check_input_is_number(input))
 	{
 		return true;
 	}
@@ -114,19 +128,26 @@ static bool check_input_is_operation(string * input)
 
 static bool check_input_is_number(string * input)
 {
-	if ((atoi(&input->at(0)) >= 0) and (atoi(&input->at(0)) < 10))
+	if (compare_char_to_nums(input->at(0)))
 	{
-		if (strcmp(&input->at(1), "."))
-		{
-			if (input->size() <= 4)
-			{
-				return true;
-			}
-		}
-		else if (input->size() == 1)
+		if (input->size() == 1)
 		{
 			return true;
 		}
+		else if (input->at(1) == '.')
+		{
+			for (unsigned int i = 2; i < input->size(); i++)
+			{
+				if (!compare_char_to_nums(input->at(i)))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		cout << input->at(1) << endl;
+
 	}
 
 	return false;
@@ -134,52 +155,149 @@ static bool check_input_is_number(string * input)
 
 static void run_operation(Dlist<double> * dlist, string * input)
 {
-	if (strcmp(input->c_str(), "+"))
+	if (!strcmp(input->c_str(), "+"))
 	{
 		if (check_stack_has_enough_operands(dlist, 2))
 		{
-			
+			double operand_one = dlist->removeFront();
+			double operand_two = dlist->removeFront();
+			double result = operand_one + operand_two;
+
+			dlist->insertFront(result);
 		}
 		else
 		{
-			
+			print_not_enough_operands();
 		}
 	}
-	else if (strcmp(input->c_str(), "-"))
+	else if (!strcmp(input->c_str(), "-"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 2))
+		{
+			double operand_one = dlist->removeFront();
+			double operand_two = dlist->removeFront();
+			double result = operand_one - operand_two;
+			
+			dlist->insertFront(result);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "*"))
+	else if (!strcmp(input->c_str(), "*"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 2))
+		{
+			double operand_one = dlist->removeFront();
+			double operand_two = dlist->removeFront();
+			double result = operand_one * operand_two;
+			
+			dlist->insertFront(result);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "/"))
+	else if (!strcmp(input->c_str(), "/"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 2))
+		{
+			if (!check_divides_by_zero(dlist))
+			{
+				double operand_one = dlist->removeFront();
+				double operand_two = dlist->removeFront();
+				double result = operand_one / operand_two;
+				
+				dlist->insertFront(result);
+			}
+			else
+			{
+				print_divide_by_zero();
+			}
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "n"))
+	else if (!strcmp(input->c_str(), "n"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 1))
+		{
+			double operand_one = dlist->removeFront();
+			double result = operand_one * -1;
+			
+			dlist->insertFront(result);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "d"))
+	else if (!strcmp(input->c_str(), "d"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 1))
+		{
+			double operand_one = dlist->removeFront();
+			double operand_two = operand_one;
+			
+			dlist->insertFront(operand_one);
+			dlist->insertFront(operand_two);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "r"))
+	else if (!strcmp(input->c_str(), "r"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 2))
+		{
+			double operand_one = dlist->removeFront();
+			double operand_two = dlist->removeFront();
+			
+			dlist->insertFront(operand_one);
+			dlist->insertFront(operand_two);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "p"))
+	else if (!strcmp(input->c_str(), "p"))
 	{
-		
+		if (check_stack_has_enough_operands(dlist, 1))
+		{
+			double operand_one = dlist->removeFront();
+
+			cout << operand_one << endl;
+			
+			dlist->insertFront(operand_one);
+		}
+		else
+		{
+			print_not_enough_operands();
+		}
 	}
-	else if (strcmp(input->c_str(), "c"))
+	else if (!strcmp(input->c_str(), "c"))
 	{
-		
+		while (!dlist->isEmpty())
+		{
+			dlist->removeFront();
+		}
 	}
-	else if (strcmp(input->c_str(), "a"))
+	else if (!strcmp(input->c_str(), "a"))
 	{
-		
+		Dlist<double> copy = *dlist;
+
+		while (!copy.isEmpty())
+		{
+			cout << copy.removeFront() << " ";
+		}
+
+		cout << endl;
 	}
 
 	return;
@@ -190,7 +308,7 @@ static bool check_stack_has_enough_operands(const Dlist<double> * dlist, int ope
 	int stack_size = 0;
 	Dlist<double> copy = *dlist;
 
-	while (copy.isEmpty())
+	while (!copy.isEmpty())
 	{
 		copy.removeBack();
 		stack_size++;
@@ -204,9 +322,53 @@ static bool check_stack_has_enough_operands(const Dlist<double> * dlist, int ope
 	return false;
 }
 
+static bool check_divides_by_zero(const Dlist<double> * dlist)
+{
+	Dlist<double> copy = *dlist;
+
+	if (!copy.isEmpty())
+	{
+		double divisor = copy.removeFront();
+
+		if ( (divisor * 1) == 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+static bool compare_char_to_nums(char elem)
+{
+	if (   (elem == '0')
+		or (elem == '1')
+		or (elem == '2')
+		or (elem == '3')
+		or (elem == '4')
+		or (elem == '5')
+		or (elem == '6')
+		or (elem == '7')
+		or (elem == '8')
+		or (elem == '9'))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 static void print_not_enough_operands()
 {
-	
+	cout << "Not enough operands\n";
 
 	return;
 }
+
+static void print_divide_by_zero()
+{
+	cout << "Divide by zero\n";
+
+	return;
+}
+
