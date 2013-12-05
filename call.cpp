@@ -60,7 +60,7 @@ int main()
 	Dlist<Event*> gold;
 	Dlist<Event*> platinum;
 	int events = 0;
-	int time = 0;
+	unsigned int time = 0;
 	int duration_remaining = 0;
 	int calls_answered = 0;
 	bool calls_left = true;
@@ -75,7 +75,7 @@ int main()
 
 		event_list.insertBack(event);
 
-		delete event; event = 0;
+		event = 0;
 	}
 
 	while (calls_left)
@@ -83,7 +83,7 @@ int main()
 		print_tick(time);
 
 		bool callers = false;
-		Event *first_queue;
+		Event *first_queue = 0;
 
 		if (!event_list.isEmpty())
 		{
@@ -114,9 +114,14 @@ int main()
 
 				print_call_from_client(&first_queue->name, &first_queue->status);
 
-				delete first_queue; first_queue = 0;
-
-				first_queue = event_list.removeFront();
+				if (!event_list.isEmpty())
+				{
+					first_queue = event_list.removeFront();
+				}
+				else
+				{
+					callers = false;
+				}
 			}
 			else
 			{
@@ -129,13 +134,14 @@ int main()
 
 		if (duration_remaining == 0)
 		{
-			Event *next_call;
+			Event *next_call = 0;
 
 			if (!platinum.isEmpty())
 			{
 				next_call = platinum.removeFront();
 				print_answering_call(&next_call->name);
 				duration_remaining = next_call->duration;
+				calls_answered++;
 
 				delete next_call; next_call = 0;
 			}
@@ -144,7 +150,8 @@ int main()
 				next_call = gold.removeFront();
 				print_answering_call(&next_call->name);
 				duration_remaining = next_call->duration;
-				
+				calls_answered++;
+
 				delete next_call; next_call = 0;
 			}
 			else if (!silver.isEmpty())
@@ -152,7 +159,8 @@ int main()
 				next_call = silver.removeFront();
 				print_answering_call(&next_call->name);
 				duration_remaining = next_call->duration;
-				
+				calls_answered++;
+
 				delete next_call; next_call = 0;
 			}
 			else if (!not_special.isEmpty())
@@ -160,7 +168,8 @@ int main()
 				next_call = not_special.removeFront();
 				print_answering_call(&next_call->name);
 				duration_remaining = next_call->duration;
-				
+				calls_answered++;
+
 				delete next_call; next_call = 0;
 			}
 		}

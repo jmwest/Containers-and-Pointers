@@ -176,7 +176,7 @@ static void run_operation(Dlist<double> * dlist, string * input)
 		{
 			double operand_one = dlist->removeFront();
 			double operand_two = dlist->removeFront();
-			double result = operand_one - operand_two;
+			double result = operand_two - operand_one;
 			
 			dlist->insertFront(result);
 		}
@@ -208,7 +208,7 @@ static void run_operation(Dlist<double> * dlist, string * input)
 			{
 				double operand_one = dlist->removeFront();
 				double operand_two = dlist->removeFront();
-				double result = operand_one / operand_two;
+				double result = operand_two / operand_one;
 				
 				dlist->insertFront(result);
 			}
