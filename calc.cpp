@@ -329,7 +329,7 @@ static bool check_divides_by_zero(const Dlist<double> * dlist)
 	{
 		double divisor = copy.removeFront();
 
-		if ( (divisor * 1) == 0)
+		if (divisor == 0)
 		{
 			return true;
 		}
