@@ -327,7 +327,6 @@ static bool check_divides_by_zero(const Dlist<double> * dlist)
 
 	if (!copy.isEmpty())
 	{
-		copy.removeFront();
 		double divisor = copy.removeFront();
 
 		if ( (divisor * 1) == 0)
