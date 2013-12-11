@@ -291,6 +291,11 @@ static void run_operation(Dlist<double> * dlist, string * input)
 	{
 		Dlist<double> copy = *dlist;
 
+		if (copy.isEmpty())
+		{
+			cout << " ";
+		}
+
 		while (!copy.isEmpty())
 		{
 			cout << copy.removeFront() << " ";
