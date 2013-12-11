@@ -16,6 +16,8 @@ all :  dlist_test dlist_test00 calc call
 	diff call2.out.correct call2.out
 	./call < call3.in > call3.out
 	diff call3.out.correct call3.out
+	./call < call4.in >call4.out
+	diff call4.out.correct call4.out
 
 dlist_test : dlist_test.cpp dlist.h
 	$(CC) $(CFLAGS) dlist_test.cpp -o dlist_test
@@ -36,6 +38,9 @@ call2 : call.cpp dlist.h
 	$(CC) $(CFLAGS) call.cpp -o call
 
 call3 : call.cpp dlist.h
+	$(CC) $(CFLAGS) call.cpp -o call
+
+call4 : call.cpp dlist.h
 	$(CC) $(CFLAGS) call.cpp -o call
 
 clean :
