@@ -1,7 +1,7 @@
 CC      := g++
 CFLAGS  := -pedantic -Wall -Werror -g
 
-all :  dlist_test dlist_test00 calc calc2 call call2 call3
+all :  dlist_test dlist_test00 calc call
 	./dlist_test > dlist_test.out
 	diff dlist_test.out.correct dlist_test.out
 	./calc < calc.in > calc.out
